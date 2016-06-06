@@ -15,11 +15,15 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
 scope = ['https://spreadsheets.google.com/feeds']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credentials-mr.json', scope)
 
 gc = gspread.authorize(credentials)
 
-wks = gc.open('sheets to jira test document').sheet1
-wks.read()
+wks = gc.open_by_key('1BES3939Y_AUc_iM36BayLHgT7tsHV_CqHfd-pBxbeCA')
+gc.close()
+
+
+

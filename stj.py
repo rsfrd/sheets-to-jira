@@ -22,4 +22,4 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credenti
 gc = gspread.authorize(credentials)
 
 wks = gc.open('sheets to jira test document').sheet1
-wks.read()
+

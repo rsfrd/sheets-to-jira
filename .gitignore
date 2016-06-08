@@ -1,2 +1,3 @@
 venv/
 gspread-credentials-mr.json
+*.swp

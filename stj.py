@@ -20,6 +20,8 @@ scope = ['https://spreadsheets.google.com/feeds']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credentials-mr.json', scope)
 
+closed_row = raw_input("Most recent closing row number > ")
+
 gc = gspread.authorize(credentials)
 
 sh = gc.open('sheets to jira test document')
@@ -27,7 +29,7 @@ sh = gc.open('sheets to jira test document')
 worksheet = sh.sheet1
 
 survey_questions = filter(None, worksheet.row_values(1))
-survey_answers = filter(None, worksheet.row_values(4))
+survey_answers = filter(None, worksheet.row_values(closed_row))
 
 for i in izip(survey_questions, survey_answers):
     print i[0]

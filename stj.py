@@ -1,9 +1,9 @@
 # complete: 
-# auth with google
-# read questions in headers, find most recent closing
-# match closing answers to headers, format for jira, export to file
+# - auth with google
+# - read questions in headers, find most recent closing
+# - match closing answers to headers, format for jira, export to file
 # to do: 
-# auth with jira, export to jira
+# - auth with jira, export to jira
 
 from itertools import *
 import gspread

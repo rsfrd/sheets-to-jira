@@ -1,16 +1,5 @@
-# auth with jira
-# auth with google sheets - done!
-#
-# in sheets
-# read row one - done!
-# copy string in each cell - done!
-# read last row - done! 
-# copy string in each cell - done!
-# match the corresponding columns - done!
-# pair them up - done!
-#
-# format for jira - done!
-# export to jira
+# complete: auth with google, read questions in headers, find most recent closing, match closing answers to headers, format for jira, export to file
+# to do: auth with jira, export to jira
 
 from itertools import *
 import gspread

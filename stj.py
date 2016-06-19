@@ -23,9 +23,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credenti
 # closed_row = raw_input("Most recent closing row number > ")
 
 gc = gspread.authorize(credentials)
-
 sh = gc.open('sheets to jira test document')
-
 worksheet = sh.sheet1
 
 def row_start(vrow):

@@ -13,10 +13,12 @@ scope = ['https://spreadsheets.google.com/feeds']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credentials-mr.json', scope)
 
+# auth, open sheet
 gc = gspread.authorize(credentials)
 sh = gc.open('sheets to jira test document')
 worksheet = sh.sheet1
 
+# find most recently added row
 def row_start(vrow):
     while worksheet.cell(vrow, 1).value != "":
         vrow += 1            
@@ -25,11 +27,14 @@ def row_start(vrow):
 
 new_closing = row_start(1)
 
+# gather questions and answers in lists
 survey_questions = filter(None, worksheet.row_values(1))
 survey_answers = filter(None, worksheet.row_values(new_closing))
 
+# write to a file for now; eventually send directly into jira
 jira = open('closing-jira.txt', 'w+')
 
+# combine questions and answers, write to file
 for i in izip(survey_questions, survey_answers):
     jira.write(i[0] + '\n')
     jira.write('- ' + i[1] + '\n\n')

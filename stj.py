@@ -5,7 +5,7 @@
 # to do: 
 # - auth with jira, export to jira
 
-from itertools import *
+from itertools import izip 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 

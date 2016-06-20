@@ -19,11 +19,11 @@ sh = gc.open('sheets to jira test document')
 worksheet = sh.sheet1
 
 # find most recently added row
-def row_start(vrow):
-    while worksheet.cell(vrow, 1).value != "":
-        vrow += 1            
+def row_start(r):
+    while worksheet.cell(r, 1).value != "":
+        r += 1            
     else:
-        return vrow - 1 
+        return r - 1 
 
 new_closing = row_start(1)
 

@@ -5,9 +5,28 @@
 # to do: 
 # - auth with jira, export to jira
 
+import os
 from itertools import izip 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from jira import JIRA
+
+options = {
+    'server': os.environ.get('SERVER')
+}
+jira = JIRA(options)
+
+key_cert_data = None
+with open('jira.pem', 'r') as key_cert_file:
+    key_cert_data = key_cert_file.read()
+
+oauth_dict = {
+    'access_token': os.environ.get('ACCESS_TOKEN'),
+    'access_token_secret': os.environ.get('ACCESS_TOKEN_SECRET'),
+    'consumer_key': os.environ.get('CONSUMER_KEY'),
+    'key_cert': key_cert_data
+}
+authed_jira = JIRA(options, oauth=oauth_dict)
 
 scope = ['https://spreadsheets.google.com/feeds']
 
@@ -29,13 +48,21 @@ new_closing = row_start(1)
 
 # gather questions and answers in lists
 survey_questions = filter(None, worksheet.row_values(1))
-survey_answers = filter(None, worksheet.row_values(new_closing))
+survey_answers = filter(None, worksheet.row_values(new_closing)) # write to a file for now; eventually send directly into jira
+# jira = open('closing-jira.txt', 'w+')
 
-# write to a file for now; eventually send directly into jira
-jira = open('closing-jira.txt', 'w+')
+descr = ""
 
 # combine questions and answers, write to file
 for i in izip(survey_questions, survey_answers):
-    jira.write(i[0] + '\n')
-    jira.write('- ' + i[1] + '\n\n')
+    descr += i[0] + '\n'
+    descr += '- ' + i[1] + '\n\n'
+
+issue_dict = {
+    'project': {'key': 'PYT'},
+    'summary': 'Confirmation of Closed',
+    'description': descr,
+    'issuetype': {'name': 'Task'},
+}
+new_issue = authed_jira.create_issue(fields=issue_dict)
 

@@ -2,3 +2,5 @@ venv/
 gspread-credentials-mr.json
 *.swp
 closing*
+jira.pem
+old*

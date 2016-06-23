@@ -56,6 +56,9 @@ descr = ""
 for i in izip(survey_questions, survey_answers):
     if i[0] == "" and i[1] == "":
         del i
+    elif i[1] == "":
+        descr += i[0] + '\n'
+        descr += '- No answer given' + '\n\n'
     else:
         descr += i[0] + '\n'
         descr += '- ' + i[1] + '\n\n'

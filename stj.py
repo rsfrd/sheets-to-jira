@@ -7,19 +7,16 @@
 
 import os
 import re
-from itertools import izip 
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from jira import JIRA
+from itertools import izip 
+from oauth2client.service_account import ServiceAccountCredentials
 
 options = {
     'server': os.environ.get('SERVER')
 }
-jira = JIRA(options)
 
-key_cert_data = None
-with open('jira.pem', 'r') as key_cert_file:
-    key_cert_data = key_cert_file.read()
+key_cert_data = os.environ.get('JIRA_KEY') 
 
 oauth_dict = {
     'access_token': os.environ.get('ACCESS_TOKEN'),
@@ -27,15 +24,14 @@ oauth_dict = {
     'consumer_key': os.environ.get('CONSUMER_KEY'),
     'key_cert': key_cert_data
 }
-authed_jira = JIRA(options, oauth=oauth_dict)
+jira = JIRA(options, oauth=oauth_dict)
 
 scope = ['https://spreadsheets.google.com/feeds']
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name('gspread-credentials-mr.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('google_creds.json', scope)
 
 # auth, open sheet
 gc = gspread.authorize(credentials)
-sh = gc.open('sheets to jira test document')
+sh = gc.open(os.environ.get('GOOGLE_SHEET'))
 worksheet = sh.sheet1
 
 # find most recently added row
@@ -51,30 +47,35 @@ new_closing = row_start(1)
 survey_questions = worksheet.row_values(1)
 survey_answers = worksheet.row_values(new_closing)
 
+# def client_name():
+#     worksheet.find(re.compile(r'Client'))
+#     return 
+# 
+# client = client_name()
+
 client_re = re.compile(r'Client')
 client = worksheet.find(client_re)
 
-title = worksheet.cell(new_closing, client.col).value + " Deploy"
-
-descr = ""
+t = worksheet.cell(new_closing, client.col).value + " Deploy"
+d = ""
 
 # combine questions and answers, build string 
 for i in izip(survey_questions, survey_answers):
     if i[0] == "" and i[1] == "":
         del i
     elif i[1] == "":
-        descr += i[0] + '\n'
-        descr += '- No answer given' + '\n\n'
+        d += i[0] + '\n'
+        d += '- No answer given' + '\n\n'
     else:
-        descr += i[0] + '\n'
-        descr += '- ' + i[1] + '\n\n'
+        d += i[0] + '\n'
+        d += '- ' + i[1] + '\n\n'
 
 # send to jira
 issue_dict = {
     'project': {'key': 'PYT'},
-    'summary': title,
-    'description': descr,
+    'summary': t,
+    'description': d,
     'issuetype': {'name': 'Task'},
 }
-new_issue = authed_jira.create_issue(fields=issue_dict)
+new_issue = jira.create_issue(fields=issue_dict)
 

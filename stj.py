@@ -56,7 +56,7 @@ survey_answers = worksheet.row_values(new_closing)
 client_re = re.compile(r'Client')
 client = worksheet.find(client_re)
 
-t = worksheet.cell(new_closing, client.col).value + " Deploy"
+s = worksheet.cell(new_closing, client.col).value + " Deploy"
 d = ""
 
 # combine questions and answers, build string 
@@ -73,7 +73,7 @@ for i in izip(survey_questions, survey_answers):
 # send to jira
 issue_dict = {
     'project': {'key': 'PYT'},
-    'summary': t,
+    'summary': s,
     'description': d,
     'issuetype': {'name': 'Task'},
 }

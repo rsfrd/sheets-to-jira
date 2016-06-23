@@ -47,16 +47,20 @@ def row_start(r):
 new_closing = row_start(1)
 
 # gather questions and answers in lists
-survey_questions = filter(None, worksheet.row_values(1))
-survey_answers = filter(None, worksheet.row_values(new_closing)) 
+survey_questions = worksheet.row_values(1)
+survey_answers = worksheet.row_values(new_closing)
 
 descr = ""
 
-# combine questions and answers, write to file
+# combine questions and answers, build string 
 for i in izip(survey_questions, survey_answers):
-    descr += i[0] + '\n'
-    descr += '- ' + i[1] + '\n\n'
+    if i[0] == "" and i[1] == "":
+        del i
+    else:
+        descr += i[0] + '\n'
+        descr += '- ' + i[1] + '\n\n'
 
+# send to jira
 issue_dict = {
     'project': {'key': 'PYT'},
     'summary': 'Confirmation of Closed',

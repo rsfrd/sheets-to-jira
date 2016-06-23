@@ -4,3 +4,4 @@ gspread-credentials-mr.json
 closing*
 jira.pem
 old*
+variables.sh

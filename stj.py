@@ -6,6 +6,7 @@
 # - all of the things! now to clean up...
 
 import os
+import re
 from itertools import izip 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -50,6 +51,11 @@ new_closing = row_start(1)
 survey_questions = worksheet.row_values(1)
 survey_answers = worksheet.row_values(new_closing)
 
+client_re = re.compile(r'Client')
+client = worksheet.find(client_re)
+
+title = worksheet.cell(new_closing, client.col).value + " Deploy"
+
 descr = ""
 
 # combine questions and answers, build string 
@@ -66,7 +72,7 @@ for i in izip(survey_questions, survey_answers):
 # send to jira
 issue_dict = {
     'project': {'key': 'PYT'},
-    'summary': 'Confirmation of Closed',
+    'summary': title,
     'description': descr,
     'issuetype': {'name': 'Task'},
 }

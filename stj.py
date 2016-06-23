@@ -48,8 +48,7 @@ new_closing = row_start(1)
 
 # gather questions and answers in lists
 survey_questions = filter(None, worksheet.row_values(1))
-survey_answers = filter(None, worksheet.row_values(new_closing)) # write to a file for now; eventually send directly into jira
-# jira = open('closing-jira.txt', 'w+')
+survey_answers = filter(None, worksheet.row_values(new_closing)) 
 
 descr = ""
 

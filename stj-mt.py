@@ -14,6 +14,7 @@ def get_jira_client():
         'server': os.environ.get('SERVER')
     }
     key_cert_data = os.environ.get('JIRA_KEY')
+    # key_cert_data = open('mt-jira.pem', 'r')
 
     oauth_dict = {
         'access_token': os.environ.get('ACCESS_TOKEN'),
@@ -29,12 +30,12 @@ def get_worksheet():
 
     scope = ['https://spreadsheets.google.com/feeds']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        'google_creds.json',
+        'google_creds_mt.json',
         scope)
 
     # auth, open sheet
     googlecred = gspread.authorize(credentials)
-    sheet = googlecred.open(os.environ.get('GOOGLE_SHEET'))
+    sheet = googlecred.open_by_key(os.environ.get('GOOGLE_SHEET'))
     return sheet.sheet1
 
 

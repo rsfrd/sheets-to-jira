@@ -31,6 +31,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('google_creds.jso
 
 # auth, open sheet
 gc = gspread.authorize(credentials)
+print os.environ.get('GOOGLE_SHEET')
 sh = gc.open(os.environ.get('GOOGLE_SHEET'))
 worksheet = sh.sheet1
 
@@ -72,7 +73,7 @@ for i in izip(survey_questions, survey_answers):
 
 # send to jira
 issue_dict = {
-    'project': {'key': 'PYT'},
+    'project': {'key': 'CM'},
     'summary': s,
     'description': d,
     'issuetype': {'name': 'Task'},

@@ -2,6 +2,7 @@ venv/
 *.json
 *.swp
 closing*
-jira.pem
+*pem
 old*
-variables.sh
+variables*
+*pub

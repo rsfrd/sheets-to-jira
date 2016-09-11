@@ -51,7 +51,7 @@ def sheet_to_jira():
 
     # send to jira
     issue_dict = {
-        'project': {'key': 'TP'},
+        'project': {'key': 'CM'},
         'summary': summary,
         'description': description,
         'components': [{'name': 'Deploy'},],

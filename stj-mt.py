@@ -6,6 +6,7 @@ import gspread
 from jira import JIRA
 from itertools import izip
 from oauth2client.service_account import ServiceAccountCredentials
+from slugify import slugify
 
 
 def get_jira_client():
@@ -63,6 +64,7 @@ def sheet_to_jira():
 
     client_re = re.compile(r'Client')
     client = worksheet.find(client_re)
+    client_slug = slugify(worksheet.cell(new_closing, client.col).value)
 
     summary = worksheet.cell(new_closing, client.col).value + " Deploy"
     description = ""
@@ -85,6 +87,7 @@ def sheet_to_jira():
         'description': description,
         'components': [{'name': 'Deploy'},],
         'issuetype': {'name': 'Task'},
+        'labels': [client_slug],
     }
     new_issue = jira.create_issue(fields=issue_dict)
     print "New Jira Created: {}".format(new_issue.key)

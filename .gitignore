@@ -1,7 +1,6 @@
 venv/
 *.json
 *.swp
-closing*
 *pem
 old*
 variables*

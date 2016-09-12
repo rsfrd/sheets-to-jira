@@ -2,7 +2,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-def get_worksheet():
+def get_worksheet(sheet_name):
     """ Get google the google worksheet, configured by environment """
 
     scope = ['https://spreadsheets.google.com/feeds']
@@ -12,7 +12,7 @@ def get_worksheet():
 
     # auth, open sheet
     googlecred = gspread.authorize(credentials)
-    sheet = googlecred.open_by_key(os.environ.get('GOOGLE_SHEET_SURVEY'))
+    sheet = googlecred.open_by_key(os.environ.get(sheet_name))
     return sheet.sheet1
 
 if __name__ == '__main__':

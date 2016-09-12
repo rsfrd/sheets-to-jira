@@ -3,7 +3,7 @@
 import re
 import gspread
 import credentials_jira
-import credentials_google_survey
+import credentials_google
 from jira import JIRA
 # from itertools import izip
 from slugify import slugify
@@ -14,7 +14,7 @@ def sheet_to_jira():
         a Google Spreadsheet """
 
     jira = credentials_jira.get_jira_client()
-    worksheet = credentials_google_survey.get_worksheet()
+    worksheet = credentials_google.get_worksheet('GOOGLE_SHEET_SURVEY')
 
     # If the goal is to find the highest numbered row with content
     # this might do it ; pull all the values out of the column and count them.

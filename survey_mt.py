@@ -54,7 +54,7 @@ def sheet_to_jira():
                 snippet += '- ' + answer + '\n\n'
         return snippet
 
-    survey_time = survey_combined[0:0]
+    survey_time = survey_combined[0:1]
     survey_time = zip_to_string(survey_time)
 
     survey_client = survey_combined[30:31] + survey_combined [27:29]

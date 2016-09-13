@@ -55,7 +55,6 @@ def sheet_to_jira():
         return snippet
 
     survey_time = survey_combined[0:1]
-    survey_time = zip_to_string(survey_time)
 
     survey_client = survey_combined[30:31] + survey_combined [27:29]
     survey_client = zip_to_string(survey_client)
@@ -66,7 +65,8 @@ def sheet_to_jira():
     survey_technical = survey_combined[7:27]
     survey_technical = zip_to_string(survey_technical)
 
-    survey_pieces.append(survey_time)
+    for x, y in survey_time:
+        survey_pieces.append('h6.' + x + ': ' + y + ' PT \n\n')
     survey_pieces.append('h3.Client' + '\n')
     survey_pieces.append(survey_client)
     survey_pieces.append('h3.Sales' + '\n' + '- ' + '\n\n')
@@ -79,7 +79,7 @@ def sheet_to_jira():
 
     # send to jira
     issue_dict = {
-        'project': {'key': 'TP'},
+        'project': {'key': 'CM'},
         'summary': summary,
         'description': description,
         'components': [{'name': 'Proposal'},],

@@ -37,30 +37,49 @@ def sheet_to_jira():
 
     summary = worksheet.cell(new_survey, client.col).value + " Proposal"
     description = ""
+    survey_pieces = []
 
     survey_combined = zip(survey_questions, survey_answers)
-    survey_combined.insert(1,survey_combined.pop(
-        [x for x, y in enumerate(survey_combined) if y[0] == 'Company Name'][0]))
-    survey_combined.insert(2,survey_combined.pop(
-        [x for x, y in enumerate(survey_combined) if y[0] == 'Name'][0]))
-    survey_combined.insert(3,survey_combined.pop(
-        [x for x, y in enumerate(survey_combined) if y[0] == 'Email Address'][0]))
-    survey_combined.insert(4,survey_combined.pop(
-        [x for x, y in enumerate(survey_combined) if 'main reason you' in y[0]][0]))
- 
-    for question, answer in survey_combined:
-        if question == "" and answer == "":
-            continue
 
-        description += question + '\n'
-        if answer == "":
-            description += '- No answer given' + '\n\n'
-        else:
-            description += '- ' + answer + '\n\n'
+    def zip_to_string(survey_snippet):
+        snippet = ""
+        for question, answer in survey_snippet:
+            if question == "" and answer == "":
+                continue
+
+            snippet+= question + '\n'
+            if answer == "":
+                snippet += '- No answer given' + '\n\n'
+            else:
+                snippet += '- ' + answer + '\n\n'
+        return snippet
+
+    survey_time = survey_combined[0:0]
+    survey_time = zip_to_string(survey_time)
+
+    survey_client = survey_combined[30:31] + survey_combined [27:29]
+    survey_client = zip_to_string(survey_client)
+
+    survey_general = survey_combined[29:30] + survey_combined [1:7]
+    survey_general = zip_to_string(survey_general)
+    
+    survey_technical = survey_combined[7:27]
+    survey_technical = zip_to_string(survey_technical)
+
+    survey_pieces.append(survey_time)
+    survey_pieces.append('h3.Client' + '\n')
+    survey_pieces.append(survey_client)
+    survey_pieces.append('h3.Sales' + '\n' + '- ' + '\n\n')
+    survey_pieces.append('h3.Survey' + '\n' + 'h4.GENERAL QUESTIONS' + '\n')
+    survey_pieces.append(survey_general)
+    survey_pieces.append('h4.TECHNICAL QUESTIONS' + '\n')
+    survey_pieces.append(survey_technical)
+
+    description = ''.join(survey_pieces)
 
     # send to jira
     issue_dict = {
-        'project': {'key': 'CM'},
+        'project': {'key': 'TP'},
         'summary': summary,
         'description': description,
         'components': [{'name': 'Proposal'},],

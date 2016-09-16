@@ -52,6 +52,20 @@ def sheet_to_jira():
         else:
             description += '- ' + answer + '\n\n'
 
+    # determine salesperson
+    salesperson_re = re.compile(r'Username')
+    sales = worksheet.find(salesperson_re)
+    salesperson = worksheet.cell(new_closing, sales.col).value
+
+    if salesperson == 'sclaydon@mediatemple.net':
+        salesperson = 'Simon'
+    if salesperson == 'jmay@mediatemple.net':
+        salesperson = 'Justin'
+    if salesperson == 'erein@mediatemple.net':
+        salesperson = 'Eric'
+    if salesperson == 'cdowling@mediatemple.net':
+        salesperson = 'Colin'
+
     # send to jira
     issue_dict = {
         'project': {'key': 'CM'},
@@ -71,7 +85,7 @@ def sheet_to_jira():
     slack_message = []
     slack_message.append('New closing in JIRA at ' + '<https://tools.mtsvc.net/jira/browse/')
     slack_message.append(new_issue.key + '|' + new_issue.key + '> from ' + client_name)
-    slack_message.append('\n' + 'CREAM!')
+    slack_message.append('\n' + 'Everybody buy ' + salesperson + ' a :beer: !')
     slack_message = ''.join(slack_message)
 
     payload = {"channel": "#mt-cloud-services",

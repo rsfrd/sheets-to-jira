@@ -1,13 +1,15 @@
 """ Utility to copy data from Google Sheets to JIRA """
 
 import re
+import os
 import gspread
 import credentials_jira
 import credentials_google
+import credentials_slack
 from jira import JIRA
 from itertools import izip
 from slugify import slugify
-
+import requests
 
 def sheet_to_jira():
     """ Using configuration from the environment, create jiras for data from
@@ -34,6 +36,7 @@ def sheet_to_jira():
     client_re = re.compile(r'Client')
     client = worksheet.find(client_re)
     client_slug = slugify(worksheet.cell(new_closing, client.col).value)
+    client_name = worksheet.cell(new_closing, client.col).value
 
     summary = worksheet.cell(new_closing, client.col).value + " Deploy"
     description = ""
@@ -58,7 +61,27 @@ def sheet_to_jira():
         'issuetype': {'name': 'Task'},
         'labels': [client_slug],
     }
+
     new_issue = jira.create_issue(fields=issue_dict)
+
+    # send to slack
+    # slack_webhook = credentials_slack.get_slack_webhook()  
+    slack_webhook = os.environ.get('SLACK_WEBHOOK')
+
+    slack_message = []
+    slack_message.append('New closing in JIRA at ' + '<https://tools.mtsvc.net/jira/browse/')
+    slack_message.append(new_issue.key + '|' + new_issue.key + '> from ' + client_name)
+    slack_message.append('\n' + 'CREAM!')
+    slack_message = ''.join(slack_message)
+
+    payload = {"channel": "#mt-cloud-services",
+        "username": "Sales Closing",
+        "text": slack_message,
+        "icon_emoji": ":dollar:"}
+    
+    requests.post(slack_webhook, json=payload)
+
+    # show result on command line
     print "New Jira Created: {}".format(new_issue.key)
 
 if __name__ == '__main__':

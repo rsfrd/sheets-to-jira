@@ -47,7 +47,7 @@ def sheet_to_jira():
             if question == "" and answer == "":
                 continue
 
-            snippet+= question + '\n'
+            snippet += question + '\n'
             if answer == "":
                 snippet += '- No answer given' + '\n\n'
             else:

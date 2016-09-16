@@ -92,7 +92,7 @@ def sheet_to_jira():
     
     new_issue = jira.create_issue(fields=issue_dict)
 
-    # send to slack
+    # send to cloud slack
     slack_webhook = os.environ.get('SLACK_WEBHOOK')
 
     slack_message = []
@@ -106,6 +106,19 @@ def sheet_to_jira():
         "icon_emoji": ":postbox:"}
 
     requests.post(slack_webhook, json=payload)
+
+    # send to sales slack
+    slack_sales_message = []
+    slack_sales_message.append('New tech survey in Cloud Services queue from ' + client_name)
+    slack_sales_message.append('\n' + 'To whom should we send the proposal?')
+    slack_sales_message = ''.join(slack_sales_message)
+
+    sales_payload = {"channel": "#mt-sales-cloud",
+        "username": "Sales Survey",
+        "text": slack_sales_message,
+        "icon_emoji": ":postbox:"}
+
+    requests.post(slack_webhook, json=sales_payload)
 
     # show result on command line
     print "New Jira Created: {}".format(new_issue.key)

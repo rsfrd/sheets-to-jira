@@ -30,28 +30,56 @@ def sheet_to_jira():
     new_closing = row_start(1)
 
     # gather questions and answers in lists
-    survey_questions = worksheet.row_values(1)
-    survey_answers = worksheet.row_values(new_closing)
+    closing_headings = worksheet.row_values(1)
+    closing_answers = worksheet.row_values(new_closing)
 
     client_re = re.compile(r'Client')
     client = worksheet.find(client_re)
-    client_slug = slugify(worksheet.cell(new_closing, client.col).value)
     client_name = worksheet.cell(new_closing, client.col).value
+    client_slug = slugify(client_name)
 
-    summary = worksheet.cell(new_closing, client.col).value + " Deploy"
+    summary = client_name + " Deploy"
     description = ""
+    closing_pieces = []
 
     # combine questions and answers, build string
-    for question, answer in izip(survey_questions, survey_answers):
-        if question == "" and answer == "":
-            continue
+    # for question, answer in izip(survey_questions, survey_answers):
+    #     if question == "" and answer == "":
+    #         continue
 
-        description += question + '\n'
-        if answer == "":
-            description += '- No answer given' + '\n\n'
-        else:
-            description += '- ' + answer + '\n\n'
+    #     description += question + '\n'
+    #     if answer == "":
+    #         description += '- No answer given' + '\n\n'
+    #     else:
+    #         description += '- ' + answer + '\n\n'
 
+    # create closing string
+    closing_combined = zip(closing_headings, closing_answers)
+      
+    def zip_to_string(survey_snippet):
+        snippet = ""
+        for question, answer in survey_snippet:
+            if question == "" and answer == "":
+                continue
+            
+            snippet += question + '\n'
+            if answer == "":
+                snippet += '- No answer given' + '\n\n'
+            else:
+                snippet += '- ' + answer + '\n\n'
+        return snippet
+    
+    closing_time = closing_combined[0:1]
+
+    closing_string = closing_combined[1:7] + closing_combined[27:30] + closing_combined[7:27]
+    closing_string = zip_to_string(closing_string)
+ 
+    for x, y in closing_time:
+        closing_pieces.append('h6.' + x + ': ' + y + ' PT \n\n')
+    closing_pieces.append(closing_string)
+  
+    description = ''.join(closing_pieces)
+  
     # determine salesperson
     salesperson_re = re.compile(r'Username')
     sales = worksheet.find(salesperson_re)

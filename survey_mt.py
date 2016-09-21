@@ -34,10 +34,10 @@ def sheet_to_jira():
     
     client_re = re.compile(r'Company Name')
     client = worksheet.find(client_re)
-    client_slug = slugify(worksheet.cell(new_survey, client.col).value)
     client_name = worksheet.cell(new_survey, client.col).value
+    client_slug = slugify(client_name)
 
-    summary = worksheet.cell(new_survey, client.col).value + " Proposal"
+    summary = client_name + " Proposal"
     description = ""
     survey_pieces = []
 
